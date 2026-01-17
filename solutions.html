@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dellight AI Solutions - LinkedIn Optimization, YouTube Growth, JITFM Platform, and Code Audit Services">
+    <meta name="keywords" content="LinkedIn Optimization, YouTube Growth, Fashion Manufacturing, Code Audit, AI Solutions">
+    <title>Solutions - AI-Powered Business Services | Dellight AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-base: #0A0A0F;
+            --dark-surface: #0E0918;
+            --dark-elevated: #1A1625;
+            --blue-400: #60A5FA;
+            --blue-500: #3B82F6;
+            --blue-600: #2563EB;
+            --blue-700: #1D4ED8;
+            --green-400: #34D399;
+            --green-500: #10B981;
+            --green-600: #059669;
+            --purple-500: #8B5CF6;
+            --purple-600: #7C3AED;
+            --pink-500: #EC4899;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-400: #9CA3AF;
+            --gray-600: #4B5563;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--dark-base);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--blue-500);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--blue-500), transparent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background: var(--blue-500);
+            border-color: var(--green-500);
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, var(--dark-base), var(--dark-surface), var(--dark-elevated));
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+        }
+
+        /* Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--blue-500), transparent);
+            top: 10%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--green-500), transparent);
+            bottom: 20%;
+            right: 15%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--purple-500), transparent);
+            top: 50%;
+            left: 50%;
+            animation: pulse 12s ease-in-out infinite;
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(14, 9, 24, 0.8);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray-100);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue-500), var(--green-500));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--blue-400);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, var(--white), var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--gray-100);
+            max-width: 800px;
+            margin: 0 auto;
+            font-weight: 300;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        /* Section */
+        .section {
+            padding: 6rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .solution-block {
+            margin-bottom: 8rem;
+            scroll-margin-top: 100px;
+        }
+
+        .solution-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .solution-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .solution-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .solution-subtitle {
+            font-size: 1.3rem;
+            color: var(--gray-400);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: rgba(14, 9, 24, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--blue-500);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--blue-400);
+        }
+
+        .feature-text {
+            color: var(--gray-100);
+            line-height: 1.8;
+        }
+
+        /* Pricing Card */
+        .pricing-container {
+            display: flex;
+            justify-content: center;
+            margin: 4rem 0;
+        }
+
+        .pricing-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--blue-500);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 1rem 0;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+            color: var(--white);
+            border: 2px solid var(--blue-500);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 4rem 2rem;
+            background: rgba(14, 9, 24, 0.8);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        footer a {
+            color: var(--blue-400);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--green-400);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero {
+                padding: 3rem 1.5rem;
+            }
+
+            .section {
+                padding: 4rem 2rem;
+            }
+
+            .solution-block {
+                margin-bottom: 6rem;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .cursor,
+            .cursor-follower {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="content">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html" class="logo">DELLIGHT AI</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gladiator.html">GLADIATOR</a></li>
+                <li><a href="aya-platform.html">AYA Platform</a></li>
+                <li><a href="solutions.html">Solutions</a></li>
+                <li><a href="mailto:hello@dellight.ai">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <h1>Business Solutions</h1>
+            <p class="hero-subtitle">
+                AI-powered services to accelerate your professional growth, channel optimization,
+                and business operations
+            </p>
+        </section>
+
+        <!-- LinkedIn Optimization -->
+        <section class="section" id="linkedin">
+            <div class="solution-block">
+                <div class="solution-header">
+                    <div class="solution-icon">💼</div>
+                    <h2 class="solution-title">LinkedIn Optimization</h2>
+                    <p class="solution-subtitle">
+                        Transform your LinkedIn presence with AI-powered profile optimization,
+                        content strategy, and engagement analytics
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Profile Optimization</h3>
+                        <p class="feature-text">
+                            AI-generated headlines, summaries, and experience descriptions that
+                            attract recruiters and showcase your expertise effectively.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Content Strategy</h3>
+                        <p class="feature-text">
+                            Data-driven content recommendations, post scheduling, and topic analysis
+                            to maximize engagement and reach your target audience.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Engagement Analytics</h3>
+                        <p class="feature-text">
+                            Comprehensive tracking of profile views, post performance, and connection
+                            growth with actionable insights and recommendations.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Network Growth</h3>
+                        <p class="feature-text">
+                            Strategic connection recommendations based on your industry, interests,
+                            and career goals to build a valuable professional network.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pricing-container">
+                    <div class="pricing-card">
+                        <h3>Professional Package</h3>
+                        <div class="price">Contact Us</div>
+                        <p style="color: var(--gray-400); margin-bottom: 1rem;">
+                            Custom pricing based on your needs
+                        </p>
+                        <a href="mailto:hello@dellight.ai?subject=LinkedIn Optimization Inquiry" class="btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- YouTube Optimization -->
+        <section class="section" id="youtube">
+            <div class="solution-block">
+                <div class="solution-header">
+                    <div class="solution-icon">📺</div>
+                    <h2 class="solution-title">YouTube Channel Optimization</h2>
+                    <p class="solution-subtitle">
+                        Grow your YouTube channel with AI-powered analytics, content optimization,
+                        and audience insights
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Audience Analytics</h3>
+                        <p class="feature-text">
+                            Deep demographic analysis of your viewers including age, location, watch time,
+                            and engagement patterns to understand your audience better.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Content Optimization</h3>
+                        <p class="feature-text">
+                            AI-powered title, description, and tag recommendations. Thumbnail analysis
+                            and SEO optimization to maximize discoverability.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Growth Metrics</h3>
+                        <p class="feature-text">
+                            Track subscriber growth, video performance, and engagement trends.
+                            Identify what content resonates and replicate success.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Automated Reporting</h3>
+                        <p class="feature-text">
+                            Weekly AI-generated insights delivered as PDF or Markdown reports.
+                            Comprehensive analytics without the manual work.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pricing-container">
+                    <div class="pricing-card">
+                        <h3>Creator Package</h3>
+                        <div class="price">Contact Us</div>
+                        <p style="color: var(--gray-400); margin-bottom: 1rem;">
+                            Tailored to your channel size and goals
+                        </p>
+                        <a href="mailto:hello@dellight.ai?subject=YouTube Optimization Inquiry" class="btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- JITFM Platform -->
+        <section class="section" id="jitfm">
+            <div class="solution-block">
+                <div class="solution-header">
+                    <div class="solution-icon">👗</div>
+                    <h2 class="solution-title">JITFM Platform</h2>
+                    <p class="solution-subtitle">
+                        Just-in-Time Fashion Manufacturing for new entrepreneurs. Launch your
+                        fashion brand without inventory risk
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Supplier Matching</h3>
+                        <p class="feature-text">
+                            Semantic search across thousands of fabric suppliers and manufacturers.
+                            AI-powered qualification to find the perfect partners for your designs.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Automated Procurement</h3>
+                        <p class="feature-text">
+                            Streamlined ordering workflows with N8N automation. Track orders,
+                            manage quotes, and communicate with suppliers from one platform.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Rapid Prototyping</h3>
+                        <p class="feature-text">
+                            Fast-track your designs from concept to sample. Connect with manufacturers
+                            who specialize in small-batch production for fashion startups.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Inventory-Free Model</h3>
+                        <p class="feature-text">
+                            Launch without bulk orders. Just-in-time manufacturing means you produce
+                            only what sells, minimizing risk for new entrepreneurs.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pricing-container">
+                    <div class="pricing-card">
+                        <h3>Entrepreneur Package</h3>
+                        <div class="price">Contact Us</div>
+                        <p style="color: var(--gray-400); margin-bottom: 1rem;">
+                            Perfect for fashion startups
+                        </p>
+                        <a href="mailto:hello@dellight.ai?subject=JITFM Platform Inquiry" class="btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Code Audit System -->
+        <section class="section" id="code-audit">
+            <div class="solution-block">
+                <div class="solution-header">
+                    <div class="solution-icon">🔍</div>
+                    <h2 class="solution-title">Code Audit System</h2>
+                    <p class="solution-subtitle">
+                        Autonomous code security analysis powered by advanced AI models.
+                        Detect vulnerabilities before they become problems
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3 class="feature-title">Unlimited Audits</h3>
+                        <p class="feature-text">
+                            Zero-cost unlimited security audits using local Qwen3-Coder-480B models.
+                            No per-scan fees, no usage limits.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Vulnerability Detection</h3>
+                        <p class="feature-text">
+                            Comprehensive scanning for SQL injection, XSS, authentication flaws,
+                            and OWASP Top 10 vulnerabilities across your codebase.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Real-time Analysis</h3>
+                        <p class="feature-text">
+                            Active-Active job queue architecture ensures fast processing.
+                            Get security findings in minutes, not hours.
+                        </p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="feature-title">Lifecycle Tracking</h3>
+                        <p class="feature-text">
+                            Historical tracking of all findings with remediation status.
+                            Monitor security improvements over time with comprehensive reporting.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pricing-container">
+                    <div class="pricing-card">
+                        <h3>Enterprise Security</h3>
+                        <div class="price">Contact Us</div>
+                        <p style="color: var(--gray-400); margin-bottom: 1rem;">
+                            Custom deployment for your organization
+                        </p>
+                        <a href="mailto:hello@dellight.ai?subject=Code Audit System Inquiry" class="btn">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Dellight AI. All rights reserved.</p>
+            <p>
+                <a href="mailto:hello@dellight.ai">hello@dellight.ai</a> |
+                <a href="index.html">Home</a> |
+                <a href="gladiator.html">GLADIATOR</a> |
+                <a href="aya-platform.html">AYA Platform</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Cursor hover effects
+        document.querySelectorAll('a, button, .feature-card, .pricing-card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Mouse-following orbs
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.orb');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                const x = mouseX * speed;
+                const y = mouseY * speed;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
