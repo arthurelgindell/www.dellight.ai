@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AYA Platform - Multi-agent AI orchestration with centralized state management and autonomous task delegation">
+    <meta name="keywords" content="AI Orchestration, Multi-Agent Systems, PostgreSQL, State Management, Enterprise AI">
+    <title>AYA Platform - Multi-Agent Orchestration | Dellight AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-base: #0A0A0F;
+            --dark-surface: #0E0918;
+            --dark-elevated: #1A1625;
+            --blue-400: #60A5FA;
+            --blue-500: #3B82F6;
+            --blue-600: #2563EB;
+            --blue-700: #1D4ED8;
+            --green-400: #34D399;
+            --green-500: #10B981;
+            --green-600: #059669;
+            --purple-500: #8B5CF6;
+            --purple-600: #7C3AED;
+            --pink-500: #EC4899;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-400: #9CA3AF;
+            --gray-600: #4B5563;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--dark-base);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--blue-500);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--blue-500), transparent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            background: var(--blue-500);
+            border-color: var(--green-500);
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, var(--dark-base), var(--dark-surface), var(--dark-elevated));
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+        }
+
+        /* Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--blue-500), transparent);
+            top: 10%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--green-500), transparent);
+            bottom: 20%;
+            right: 15%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, var(--purple-500), transparent);
+            top: 50%;
+            left: 50%;
+            animation: pulse 12s ease-in-out infinite;
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(14, 9, 24, 0.8);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray-100);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue-500), var(--green-500));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--blue-400);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.2));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--blue-500);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            color: var(--blue-400);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -3px;
+            background: linear-gradient(135deg, var(--white), var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--gray-100);
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            line-height: 1.6;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+        }
+
+        .btn {
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+            color: var(--white);
+            border: 2px solid var(--blue-500);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--green-400);
+            border: 2px solid var(--green-500);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--green-400);
+            transform: translateY(-3px);
+        }
+
+        /* Section */
+        .section {
+            padding: 6rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--gray-400);
+            margin-bottom: 4rem;
+            max-width: 700px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(14, 9, 24, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 3rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue-500), var(--green-500));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            border-color: var(--blue-500);
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--blue-400);
+        }
+
+        .feature-text {
+            color: var(--gray-100);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--gray-400);
+        }
+
+        .feature-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--green-400);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+            margin: 4rem 0;
+            padding: 4rem 2rem;
+            background: rgba(14, 9, 24, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .stat-item {
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.1);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--blue-400), var(--green-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--gray-400);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Architecture Diagram */
+        .architecture-visual {
+            background: rgba(14, 9, 24, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 4rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .arch-node {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--blue-500);
+            transition: all 0.3s ease;
+        }
+
+        .arch-node:hover {
+            border-left-color: var(--green-500);
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .arch-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--blue-400);
+            margin-bottom: 0.8rem;
+        }
+
+        .arch-text {
+            color: var(--gray-100);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .use-case-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 2.5rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--green-500);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .use-case-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--blue-500);
+            margin-bottom: 1rem;
+        }
+
+        .use-case-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--green-400);
+        }
+
+        .use-case-text {
+            color: var(--gray-100);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 4rem 2rem;
+            background: rgba(14, 9, 24, 0.8);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        footer a {
+            color: var(--blue-400);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--green-400);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero {
+                min-height: 70vh;
+                padding: 3rem 1.5rem;
+            }
+
+            .section {
+                padding: 4rem 2rem;
+            }
+
+            .features-grid,
+            .use-cases {
+                grid-template-columns: 1fr;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .cursor,
+            .cursor-follower {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="content">
+        <!-- Navigation -->
+        <nav>
+            <a href="index.html" class="logo">DELLIGHT AI</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gladiator.html">GLADIATOR</a></li>
+                <li><a href="aya-platform.html">AYA Platform</a></li>
+                <li><a href="mailto:hello@dellight.ai">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">
+                ⚡ MULTI-AGENT ORCHESTRATION
+            </div>
+            <h1>AYA Platform</h1>
+            <p class="hero-subtitle">
+                Enterprise-grade multi-agent AI orchestration with centralized state management,
+                autonomous task delegation, and production-ready auditability. Built on Apple Silicon.
+            </p>
+            <div class="cta-group">
+                <a href="mailto:hello@dellight.ai" class="btn btn-primary">Get Started</a>
+                <a href="#architecture" class="btn btn-secondary">View Architecture</a>
+            </div>
+        </section>
+
+        <!-- Core Features -->
+        <section class="section">
+            <h2 class="section-title">Core Capabilities</h2>
+            <p class="section-subtitle">
+                Production-tested infrastructure for autonomous AI agent coordination
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🧠</span>
+                    <h3 class="feature-title">Context Persistence Architecture</h3>
+                    <p class="feature-text">
+                        Centralized state management with PostgreSQL-backed CPA ensuring every
+                        agent session maintains continuity across deployments.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Session lifecycle management</li>
+                        <li>Progress tracking & rollback</li>
+                        <li>Feature verification</li>
+                        <li>Environment state auditing</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🗄️</span>
+                    <h3 class="feature-title">PostgreSQL High Availability</h3>
+                    <p class="feature-text">
+                        Enterprise-grade database infrastructure with pgvector for semantic search
+                        and real-time vector operations.
+                    </p>
+                    <ul class="feature-list">
+                        <li>132K+ vector embeddings (768-dim)</li>
+                        <li>HNSW indexing for fast retrieval</li>
+                        <li>HA replication across nodes</li>
+                        <li>Sub-second query response</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <h3 class="feature-title">Autonomous Task Delegation</h3>
+                    <p class="feature-text">
+                        Intelligent work distribution across 60+ specialized agents with
+                        LangGraph orchestration and Temporal durability.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Multi-step workflow coordination</li>
+                        <li>Agent specialization patterns</li>
+                        <li>Failure recovery & retry logic</li>
+                        <li>Real-time progress monitoring</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">MLX-Optimized LLMs</h3>
+                    <p class="feature-text">
+                        Native Apple Silicon acceleration with MLX framework for maximum
+                        throughput on M3 Ultra hardware.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Qwen3-Next-80B (local inference)</li>
+                        <li>GLM-4.5-Air (fast reasoning)</li>
+                        <li>BGE embeddings (768-dim)</li>
+                        <li>Zero external API dependencies</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔍</span>
+                    <h3 class="feature-title">Observability & Monitoring</h3>
+                    <p class="feature-text">
+                        Complete system visibility with N8N workflow automation and
+                        Temporal activity tracking.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Real-time agent activity logs</li>
+                        <li>Performance metrics dashboard</li>
+                        <li>Error tracking & alerting</li>
+                        <li>Audit trail for compliance</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3 class="feature-title">Zero Trust Security</h3>
+                    <p class="feature-text">
+                        Post-quantum cryptography with Tailscale mesh networking and
+                        air-gap deployment support.
+                    </p>
+                    <ul class="feature-list">
+                        <li>NIST-standardized quantum resistance</li>
+                        <li>WireGuard-based mesh</li>
+                        <li>Air-gap capable operation</li>
+                        <li>End-to-end encryption</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">512GB</div>
+                    <div class="stat-label">RAM Per Node</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">60+</div>
+                    <div class="stat-label">Active Agents</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">132K+</div>
+                    <div class="stat-label">Vector Embeddings</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture -->
+        <section class="section" id="architecture">
+            <h2 class="section-title">System Architecture</h2>
+            <p class="section-subtitle">
+                Multi-layer design for scalability, resilience, and performance
+            </p>
+
+            <div class="architecture-visual">
+                <div class="arch-grid">
+                    <div class="arch-node">
+                        <div class="arch-title">🖥️ Compute Layer</div>
+                        <div class="arch-text">
+                            Mac Studio M3 Ultra with 512GB unified memory, 60-core GPU,
+                            and 24-core CPU for hybrid workloads.
+                        </div>
+                    </div>
+
+                    <div class="arch-node">
+                        <div class="arch-title">🗄️ Storage Layer</div>
+                        <div class="arch-text">
+                            PostgreSQL 18 with pgvector extension, HNSW indexing,
+                            and HA replication for zero data loss.
+                        </div>
+                    </div>
+
+                    <div class="arch-node">
+                        <div class="arch-title">🤖 AI/ML Layer</div>
+                        <div class="arch-text">
+                            MLX-native models (Qwen3-Next-80B, GLM-4.5-Air) with
+                            BGE embeddings for semantic operations.
+                        </div>
+                    </div>
+
+                    <div class="arch-node">
+                        <div class="arch-title">🔄 Orchestration</div>
+                        <div class="arch-text">
+                            LangGraph for complex workflows, Temporal for durable
+                            execution, N8N for automation pipelines.
+                        </div>
+                    </div>
+
+                    <div class="arch-node">
+                        <div class="arch-title">🌐 Network Layer</div>
+                        <div class="arch-text">
+                            Tailscale mesh networking with WireGuard encryption,
+                            zero-trust authentication, and private DNS.
+                        </div>
+                    </div>
+
+                    <div class="arch-node">
+                        <div class="arch-title">📊 Observability</div>
+                        <div class="arch-text">
+                            Real-time monitoring, structured logging, audit trails,
+                            and performance metrics across all services.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Database Infrastructure -->
+        <section class="section">
+            <h2 class="section-title">Database Infrastructure</h2>
+            <p class="section-subtitle">
+                Production-grade PostgreSQL with vector search capabilities
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">📦</span>
+                    <h3 class="feature-title">Vector Storage</h3>
+                    <p class="feature-text">
+                        132,460 indexed vectors with 768-dimensional BGE embeddings.
+                        HNSW indexing for sub-second similarity search at scale.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <h3 class="feature-title">High Availability</h3>
+                    <p class="feature-text">
+                        Multi-node replication with automatic failover. Zero downtime
+                        deployments and continuous backup strategy.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Performance</h3>
+                    <p class="feature-text">
+                        Query response times under 100ms for most operations.
+                        Optimized indexes and query plans for production workloads.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases -->
+        <section class="section">
+            <h2 class="section-title">Use Cases</h2>
+            <p class="section-subtitle">
+                Real-world applications of the AYA platform
+            </p>
+
+            <div class="use-cases">
+                <div class="use-case-card">
+                    <div class="use-case-number">01</div>
+                    <h3 class="use-case-title">Autonomous Code Review</h3>
+                    <p class="use-case-text">
+                        Agents automatically review pull requests, identify security
+                        vulnerabilities, and suggest optimizations before human review.
+                    </p>
+                </div>
+
+                <div class="use-case-card">
+                    <div class="use-case-number">02</div>
+                    <h3 class="use-case-title">Intelligent Documentation</h3>
+                    <p class="use-case-text">
+                        Automated technical documentation generation from codebase analysis,
+                        keeping docs in sync with implementation changes.
+                    </p>
+                </div>
+
+                <div class="use-case-card">
+                    <div class="use-case-number">03</div>
+                    <h3 class="use-case-title">Multi-Step Workflows</h3>
+                    <p class="use-case-text">
+                        Complex task orchestration across multiple agents, with state
+                        persistence and automatic recovery from failures.
+                    </p>
+                </div>
+
+                <div class="use-case-card">
+                    <div class="use-case-number">04</div>
+                    <h3 class="use-case-title">Research & Analysis</h3>
+                    <p class="use-case-text">
+                        Semantic search across large codebases and documentation,
+                        with context-aware retrieval and summarization.
+                    </p>
+                </div>
+
+                <div class="use-case-card">
+                    <div class="use-case-number">05</div>
+                    <h3 class="use-case-title">Testing & QA</h3>
+                    <p class="use-case-text">
+                        Autonomous test generation, execution, and validation with
+                        TDD-first approach mandated by governance.
+                    </p>
+                </div>
+
+                <div class="use-case-card">
+                    <div class="use-case-number">06</div>
+                    <h3 class="use-case-title">Infrastructure Monitoring</h3>
+                    <p class="use-case-text">
+                        24/7 system health monitoring with automated incident response
+                        and self-healing capabilities.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section" style="text-align: center; padding: 6rem 4rem;">
+            <h2 class="section-title">Deploy AYA Platform</h2>
+            <p class="section-subtitle" style="margin: 0 auto 3rem;">
+                Contact us to discuss enterprise deployment and custom agent development
+            </p>
+            <div class="cta-group" style="justify-content: center;">
+                <a href="mailto:hello@dellight.ai" class="btn btn-primary">Contact Sales</a>
+                <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Dellight AI. All rights reserved.</p>
+            <p>
+                <a href="mailto:hello@dellight.ai">hello@dellight.ai</a> |
+                <a href="index.html">Home</a> |
+                <a href="gladiator.html">GLADIATOR</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Cursor hover effects
+        document.querySelectorAll('a, button, .feature-card, .use-case-card, .arch-node').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Mouse-following orbs
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.orb');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                const x = mouseX * speed;
+                const y = mouseY * speed;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .use-case-card, .arch-node').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
